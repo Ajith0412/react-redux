@@ -1,9 +1,9 @@
 import Button from 'react-bootstrap/Button';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Table } from 'react-bootstrap'
 import MyVerticallyCenteredModal from './updateTask';
 import { useDispatch, useSelector } from 'react-redux'
-import { removeTask, selectedInTask } from '../slices/taskSlice';
+import { deleteFromServer, getTaskFromServer, removeTask, selectedInTask } from '../slices/taskSlice';
 
 const TaskList = () => {
 
@@ -19,8 +19,17 @@ const TaskList = () => {
     }
     const deleteTask = (task) => {
         alert("Are Sure want to delete?")
-        dispatch(removeTask(task))
+        dispatch(deleteFromServer(task))
+
+            .unwrap()
+            .then(() => {
+                dispatch(removeTask(task))
+            })
     }
+
+    useEffect(() => {
+        dispatch(getTaskFromServer())
+    }, [dispatch])
     return (
         <>
             <Table striped bordered hover>
